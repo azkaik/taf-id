@@ -1,9 +1,10 @@
 // Layanan API Al-Qur'an dan Tafsir Kemenag RI
 const BASE_URL = "https://sunnah.amanahagent.cloud/api/v1";
-const API_KEY = "sk_sunnah_5296c18cdb99e17130b29785a53c8571dc522cbeb2a83c24";
+const API_KEY = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_KEY) || "sk_sunnah_5296c18cdb99e17130b29785a53c8571dc522cbeb2a83c24";
 
 // In-memory cache untuk mencegah request duplikat
 const memoryCache = new Map();
+const equranSurahCache = new Map();
 
 /**
  * Helper untuk parsing response dengan pembersihan UTF-8 BOM
@@ -11,7 +12,7 @@ const memoryCache = new Map();
 async function parseResponseSafe(response) {
   if (!response.ok) {
     if (response.status === 429) {
-      throw new Error("Batas permintaan API tercapai (Rate Limit / Overload). Mohon tunggu beberapa detik lalu coba lagi.");
+      throw new Error("Batas permintaan API tercapai (Rate Limit / Overload).");
     }
     if (response.status === 404) {
       throw new Error("Data ayat atau tafsir tidak ditemukan di server.");
@@ -31,7 +32,38 @@ async function parseResponseSafe(response) {
 }
 
 /**
+ * Fallback resmi ke equran.id jika server utama mengalami gangguan/rate limit
+ */
+async function fetchAyahFromEquran(surahNum, ayahNum) {
+  let surahData = equranSurahCache.get(surahNum);
+  if (!surahData) {
+    const res = await fetch(`https://equran.id/api/v2/surat/${surahNum}`);
+    if (!res.ok) throw new Error(`Gagal memuat surah ${surahNum} dari equran.id`);
+    const json = await res.json();
+    surahData = json.data;
+    equranSurahCache.set(surahNum, surahData);
+  }
+
+  const ayahItem = surahData?.ayat?.find(a => a.nomorAyat === ayahNum);
+  if (!ayahItem) {
+    throw new Error(`Ayat ${ayahNum} tidak ditemukan pada surah ${surahNum}`);
+  }
+
+  return {
+    surah_number: surahNum,
+    ayah_number: ayahNum,
+    ayah_key: `${surahNum}:${ayahNum}`,
+    surah_name_en: surahData.namaLatin || `Surah ${surahNum}`,
+    surah_name_ar: surahData.nama || "",
+    text_arabic: ayahItem.teksArab,
+    text_indonesian: ayahItem.teksIndonesia,
+    text_latin: ayahItem.teksLatin
+  };
+}
+
+/**
  * Fetch data ayat Al-Qur'an (Arab + Terjemahan Indonesia)
+ * Dilengkapi failover otomatis ke equran.id jika terjadi kendala jaringan/rate limit
  * @param {number|string} surah - Nomor surah (1-114)
  * @param {number|string} ayah - Nomor ayat
  * @returns {Promise<object>}
@@ -56,7 +88,7 @@ export async function fetchAyah(surah, ayah) {
   } catch (e) {}
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
+  const timeoutId = setTimeout(() => controller.abort(), 12000);
 
   try {
     const response = await fetch(`${BASE_URL}/quran/${surahNum}:${ayahNum}`, {
@@ -84,11 +116,18 @@ export async function fetchAyah(surah, ayah) {
     return data;
   } catch (error) {
     clearTimeout(timeoutId);
-    if (error.name === "AbortError") {
-      throw new Error("Waktu tunggu permintaan habis (Timeout). Mohon periksa koneksi internet Anda.");
+    console.warn(`Gagal mengambil ayat ${surahNum}:${ayahNum} dari server utama (${error.message}). Memuat dari cadangan equran.id...`);
+    try {
+      const fallbackData = await fetchAyahFromEquran(surahNum, ayahNum);
+      memoryCache.set(cacheKey, fallbackData);
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify(fallbackData));
+      } catch (e) {}
+      return fallbackData;
+    } catch (fallbackErr) {
+      console.error(`Gagal memuat ayat dari server cadangan:`, fallbackErr);
+      throw error;
     }
-    console.error(`Error fetching ayah ${surahNum}:${ayahNum}:`, error);
-    throw error;
   }
 }
 
