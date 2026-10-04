@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Scheherazade+New:wght@400;600;700&display=swap');
+
+:root {
+  /* Palet Retro Warm Pastel (Mode Siang) */
+  --bg-primary: #FAF3E0;
+  --bg-surface: #FFFDF8;
+  --bg-surface-elevated: #F5ECD4;
+  --bg-card-accent: #F4E8D0;
+  
+  --text-main: #3C2918;
+  --text-muted: #826B55;
+  --text-dim: #A8937D;
+  
+  --border-soft: #EBDDC6;
+  --border-focus: #DDA15E;
+
+  /* Aksen Retro Warm */
+  --accent-gold: #E89E38;
+  --accent-amber: #D87D36;
+  --accent-terracotta: #C85A32;
+  --accent-cream: #FDE8C7;
+  
+  --shadow-warm: 0 10px 25px -5px rgba(184, 115, 51, 0.12), 0 8px 10px -6px rgba(184, 115, 51, 0.08);
+  --shadow-retro-card: 0 4px 16px rgba(90, 60, 30, 0.06);
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-arabic: 'Amiri', 'Scheherazade New', serif;
+}
+
+html.dark {
+  /* Palet Warm Eye-Comfort Dark Mode (Mode Malam yang Tidak Menyilaukan) */
+  --bg-primary: #12100E;
+  --bg-surface: #1C1814;
+  --bg-surface-elevated: #26211C;
+  --bg-card-accent: #2A241E;
+  
+  --text-main: #F4ECE1;
+  --text-muted: #B8A896;
+  --text-dim: #7C6E60;
+  
+  --border-soft: #2E2620;
+  --border-focus: #DDA15E;
+
+  --accent-gold: #F0A84E;
+  --accent-amber: #DF843F;
+  --accent-terracotta: #C7623E;
+  --accent-cream: #382C1E;
+  
+  --shadow-warm: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+  --shadow-retro-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Tipografi Huruf Arab */
+.arabic-text {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  text-align: right;
+  line-height: 2.2;
+}
+
+/* Pita Gelombang Retro (Retro Wavy Motif) */
+.retro-wave-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.retro-wave-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Piringan Medallion / Vinyl Focal Screen */
+.medallion-disk {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FDE8C7 0%, #F6D6AA 50%, #E8BD86 100%);
+  box-shadow: 0 15px 35px rgba(184, 115, 51, 0.22), inset 0 0 16px rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: 4px solid rgba(216, 125, 54, 0.35);
+  animation: diskFloat 6s ease-in-out infinite alternate;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark .medallion-disk {
+  background: radial-gradient(circle, #2E251E 0%, #1A1512 60%, #0E0C0A 100%);
+  border: 4px solid rgba(240, 168, 78, 0.35);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 25px rgba(0, 0, 0, 0.9);
+}
+
+.medallion-rings {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px dashed rgba(184, 115, 51, 0.35);
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.dark .medallion-rings {
+  border: 1px dashed rgba(230, 180, 110, 0.2);
+}
+
+.medallion-center {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E89E38 0%, #D87D36 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  color: #FFFDF8;
+}
+
+@keyframes diskFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Card Retro */
+.retro-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-retro-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.retro-card:hover {
+  border-color: var(--border-focus);
+}
+
+/* Tombol Pill Retro */
+.pill-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.pill-button-primary {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-amber) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(216, 125, 54, 0.35);
+}
+
+.pill-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(216, 125, 54, 0.45);
+}
+
+.pill-button-primary:active {
+  transform: translateY(0px);
+}
+
+.pill-button-secondary {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+}
+
+.pill-button-secondary:hover {
+  background-color: var(--bg-card-accent);
+}
+
+/* Input Fields */
+.retro-input {
+  width: 100%;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-soft);
+  color: var(--text-main);
+  border-radius: 1rem;
+  padding: 0.85rem 1.15rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.retro-input:focus {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 3px rgba(216, 125, 54, 0.15);
+}
+
+/* Bottom Navigation Bar is styled in src/components/common/BottomNav.svelte */
+
+
+/* Tafsir Content HTML Formatting */
+.tafsir-body {
+  font-size: 0.975rem;
+  line-height: 1.85;
+  color: var(--text-main);
+}
+
+.tafsir-body h2, .tafsir-body h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-amber);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  border-left: 4px solid var(--accent-gold);
+  padding-left: 0.75rem;
+}
+
+.tafsir-body p {
+  margin-bottom: 1.15rem;
+}
+
+/* Arabic citations inside tafsir */
+.tafsir-body p:has(span[dir="rtl"]),
+.tafsir-body .arabic {
+  font-family: var(--font-arabic);
+  font-size: 1.35rem;
+  line-height: 2.2;
+  color: #9C5824;
+  direction: rtl;
+  text-align: right;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-surface-elevated);
+  border-radius: 0.75rem;
+}
+
+.dark .tafsir-body .arabic {
+  color: #F0A84E;
+}
+
+/* Scrollbar Stylings */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-soft);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}

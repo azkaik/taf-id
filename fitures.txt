@@ -1,0 +1,13 @@
+
+
+curl https://sunnah.amanahagent.cloud/api/v1/tafsir/2:255 \
+  -H "X-API-Key: sk_sunnah_5296c18cdb99e17130b29785a53c8571dc522cbeb2a83c24"
+
+fitures:
+- pencarian surah serta tafsir untuk setiap ayat 
+- daftar surah navigasi untuk menampilkan daftar surat Al-Qur'an agar pengguna bisa memilih surat apa yang ingin dibaca
+- dark mode agar memudahkan membaca dan tidak membuat sakit mata
+- bookmark & riwayat terakhir dibaca agar bisa menandai apa yang penting dan bisa langsung membuka tafsir yang terakhir dibaca
+- pencarian kata kunci agar memudahkan pencarian
+- catatan pribadi (notes) agar bisa menjadi catatan untuk diri kita sendiri
+- Kutipan Harian / Ayat Hari Ini (Daily Verse Widget) 
