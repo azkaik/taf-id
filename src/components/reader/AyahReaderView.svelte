@@ -858,6 +858,7 @@
 
   .retro-range-slider {
     width: 100%;
+    appearance: none;
     -webkit-appearance: none;
     height: 6px;
     border-radius: 9999px;
@@ -867,6 +868,7 @@
   }
 
   .retro-range-slider::-webkit-slider-thumb {
+    appearance: none;
     -webkit-appearance: none;
     width: 20px;
     height: 20px;

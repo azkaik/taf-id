@@ -21,10 +21,7 @@
     AlertCircle,
     RefreshCw,
     Clock,
-    Quote,
-    Layers,
-    Sparkles,
-    ScrollText
+    Quote
   } from "lucide-svelte";
   import { toggleAyahBookmark } from "../../stores/userStore.js";
 
@@ -377,7 +374,7 @@
             </div>
             {#if structuredSections.length > 1}
               <div class="meta-sections-pill" title="Jumlah sub-bab pembahasan">
-                <Layers size={13} />
+                <BookOpen size={13} />
                 <span>{structuredSections.length} Bagian</span>
               </div>
             {/if}
